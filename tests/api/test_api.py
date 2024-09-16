@@ -1,7 +1,7 @@
 import unittest
 
 from fastapi.testclient import TestClient
-from challenge import app
+from challenge import application as app
 
 
 class TestBatchPipeline(unittest.TestCase):
@@ -18,8 +18,8 @@ class TestBatchPipeline(unittest.TestCase):
                 }
             ]
         }
-        # when("xgboost.XGBClassifier").predict(ANY).thenReturn(np.array([0])) # change this line to the model of chosing
         response = self.client.post("/predict", json=data)
+        print(response.json())  # Imprimir para depuración
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), {"predict": [0]})
     
@@ -34,7 +34,6 @@ class TestBatchPipeline(unittest.TestCase):
                 }
             ]
         }
-        # when("xgboost.XGBClassifier").predict(ANY).thenReturn(np.array([0]))# change this line to the model of chosing
         response = self.client.post("/predict", json=data)
         self.assertEqual(response.status_code, 400)
 
@@ -48,7 +47,6 @@ class TestBatchPipeline(unittest.TestCase):
                 }
             ]
         }
-        # when("xgboost.XGBClassifier").predict(ANY).thenReturn(np.array([0]))# change this line to the model of chosing
         response = self.client.post("/predict", json=data)
         self.assertEqual(response.status_code, 400)
     

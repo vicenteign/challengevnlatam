@@ -28,7 +28,7 @@ class TestModel(unittest.TestCase):
     def setUp(self) -> None:
         super().setUp()
         self.model = DelayModel()
-        self.data = pd.read_csv(filepath_or_buffer="../data/data.csv")
+        self.data = pd.read_csv(filepath_or_buffer="./data/data.csv")
         
 
     def test_model_preprocess_for_training(
@@ -43,9 +43,9 @@ class TestModel(unittest.TestCase):
         assert features.shape[1] == len(self.FEATURES_COLS)
         assert set(features.columns) == set(self.FEATURES_COLS)
 
-        assert isinstance(target, pd.DataFrame)
-        assert target.shape[1] == len(self.TARGET_COL)
-        assert set(target.columns) == set(self.TARGET_COL)
+        
+        assert isinstance(target, pd.Series)
+        assert target.shape[0] == self.data.shape[0]
 
 
     def test_model_preprocess_for_serving(
@@ -90,8 +90,14 @@ class TestModel(unittest.TestCase):
     def test_model_predict(
         self
     ):
-        features = self.model.preprocess(
-            data=self.data
+        features, target = self.model.preprocess(
+            data=self.data,
+            target_column="delay"
+        )
+
+        self.model.fit(
+            features=features,
+            target=target
         )
 
         predicted_targets = self.model.predict(
