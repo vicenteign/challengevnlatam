@@ -65,8 +65,7 @@ async def post_predict(flight_data_list: FlightDataList) -> dict:
 
     try:
         # Convert the list of FlightData to a DataFrame
-        data = pd.DataFrame([flight.dict() for flight in flight_data_list.flights])
-
+        data = pd.DataFrame([flight.model_dump() for flight in flight_data_list.flights])
         # Preprocess the data
         features = model.preprocess(data)
 
